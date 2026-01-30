@@ -652,10 +652,7 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 
 Having issues or questions? We're here to help!
 
-- 🐛 **Bug Reports**: [Open an issue](https://github.com/yourusername/shoplist/issues/new?template=bug_report.md)
-- 💡 **Feature Requests**: [Request a feature](https://github.com/yourusername/shoplist/issues/new?template=feature_request.md)
-- 💬 **Discussions**: [Join the discussion](https://github.com/yourusername/shoplist/discussions)
-- 📧 **Email**: [your.email@example.com](mailto:your.email@example.com)
+- 📧 **Email**: [muhammetemingundogar53@gmail.com](mailto:muhammetemingundogar53@gmail.com)
 
 ---
 
