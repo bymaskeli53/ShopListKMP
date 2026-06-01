@@ -72,6 +72,7 @@ fun DetailScreen(
     shoppingList: ShoppingList,
     onNavigateBack: () -> Unit,
     onSave: suspend (String, String, List<ShoppingItem>) -> Unit,
+    onToggleItemCompletion: suspend (String, String, Boolean) -> Unit = { _, _, _ -> },
     modifier: Modifier = Modifier
 ) {
     val strings = LocalStrings.current
@@ -79,7 +80,13 @@ fun DetailScreen(
     // Use remember with key to reset when shopping list changes
     var shoppingItems by remember(shoppingList.id, shoppingList.items) {
         mutableStateOf(shoppingList.items.map { item ->
-            ShoppingItemFormState(id = item.id, title = item.title, quantity = item.quantity, unit = item.unit)
+            ShoppingItemFormState(
+                id = item.id,
+                title = item.title,
+                quantity = item.quantity,
+                unit = item.unit,
+                isCompleted = item.isCompleted
+            )
         })
     }
 
@@ -253,7 +260,8 @@ fun DetailScreen(
                                         id = item.id,
                                         title = item.title,
                                         quantity = item.quantity,
-                                        unit = item.unit
+                                        unit = item.unit,
+                                        isCompleted = item.isCompleted
                                     )
                                 }
                             // Wait for the save to complete
@@ -415,7 +423,19 @@ fun DetailScreen(
                             textPrimary = textPrimary,
                             textSecondary = textSecondary,
                             focusRequester = focusRequester,
-                            focusManager = focusManager
+                            focusManager = focusManager,
+                            isCompleted = item.isCompleted,
+                            onToggleComplete = {
+                                val newValue = !item.isCompleted
+                                // Optimistically update local state...
+                                shoppingItems = shoppingItems.toMutableList().apply {
+                                    this[index] = this[index].copy(isCompleted = newValue)
+                                }
+                                // ...and persist immediately so it survives navigating back
+                                scope.launch {
+                                    onToggleItemCompletion(shoppingList.id, item.id, newValue)
+                                }
+                            }
                         )
                     }
 

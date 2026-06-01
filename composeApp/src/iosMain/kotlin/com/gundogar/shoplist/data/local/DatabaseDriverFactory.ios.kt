@@ -19,7 +19,7 @@ actual class DatabaseDriverFactory {
                 )
             },
             // iOS uses SQLDelight's automatic migration via .sqm files
-            // The migration file at database/1.sqm will be automatically applied
+            // The migrations at database/1.sqm and database/2.sqm are applied automatically
         )
     }
 }

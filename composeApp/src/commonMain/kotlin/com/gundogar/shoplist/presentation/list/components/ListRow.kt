@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
@@ -40,6 +41,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.gundogar.shoplist.domain.model.ShoppingItem
 import com.gundogar.shoplist.domain.model.ShoppingList
 import com.gundogar.shoplist.ui.strings.LocalStrings
 
@@ -49,6 +51,7 @@ fun ListRow(
     shoppingList: ShoppingList,
     onClick: (ShoppingList) -> Unit,
     onToggle: (ShoppingList) -> Unit,
+    onToggleItem: (ShoppingList, ShoppingItem) -> Unit = { _, _ -> },
     onReadAloud: (ShoppingList) -> Unit = {},
     backgroundColor: Color,
     textColor: Color,
@@ -113,16 +116,32 @@ fun ListRow(
 
                 // Show all shopping items vertically
                 shoppingList.items.forEachIndexed { index, shoppingItem ->
+                    // An item reads as done when the whole list is completed or
+                    // the item itself has been individually marked completed.
+                    val itemCompleted = shoppingList.isCompleted || shoppingItem.isCompleted
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            text = "• ",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = accentColor,
-                            fontWeight = FontWeight.Bold
-                        )
+                        // Per-item checkbox: toggle a single item done without
+                        // opening the detail screen. Disabled when the whole list
+                        // is already completed (the list-level toggle governs that).
+                        Box(
+                            modifier = Modifier
+                                .size(32.dp)
+                                .clickable(enabled = !shoppingList.isCompleted) {
+                                    onToggleItem(shoppingList, shoppingItem)
+                                },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = if (itemCompleted) Icons.Filled.CheckCircle else Icons.Outlined.Circle,
+                                contentDescription = if (shoppingItem.isCompleted) strings.contentDescMarkIncomplete else strings.contentDescMarkComplete,
+                                tint = if (itemCompleted) accentColor else textColor.copy(alpha = 0.5f),
+                                modifier = Modifier.size(18.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = buildString {
                                 if (shoppingItem.quantity.isNotBlank() && shoppingItem.unit.isNotBlank()) {
@@ -134,9 +153,10 @@ fun ListRow(
                                 }
                                 append(shoppingItem.title)
                             },
+                            modifier = Modifier.alpha(if (itemCompleted) 0.5f else 1f),
                             style = MaterialTheme.typography.bodyMedium,
                             color = textColor.copy(alpha = 0.9f),
-                            textDecoration = if (shoppingList.isCompleted) TextDecoration.LineThrough else null
+                            textDecoration = if (itemCompleted) TextDecoration.LineThrough else null
                         )
                     }
 
@@ -148,7 +168,10 @@ fun ListRow(
 
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = strings.formatItemCount(shoppingList.items.size),
+                    text = strings.formatCompletedCount(
+                        completed = shoppingList.items.count { it.isCompleted },
+                        total = shoppingList.items.size
+                    ),
                     style = MaterialTheme.typography.bodySmall,
                     color = textColor.copy(alpha = 0.6f)
                 )

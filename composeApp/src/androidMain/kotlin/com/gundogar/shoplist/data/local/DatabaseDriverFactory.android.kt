@@ -65,6 +65,23 @@ actual class DatabaseDriverFactory(private val context: Context) {
                             """)
                         }
                     }
+
+                    // Handle migration from version 2 to 3
+                    if (oldVersion < 3) {
+                        // Add the per-item completion column (only if it doesn't already exist)
+                        val cursor = db.query("PRAGMA table_info(ShoppingListItem)")
+                        var hasIsCompletedColumn = false
+
+                        while (cursor.moveToNext()) {
+                            val columnName = cursor.getString(cursor.getColumnIndex("name"))
+                            if (columnName == "isCompleted") hasIsCompletedColumn = true
+                        }
+                        cursor.close()
+
+                        if (!hasIsCompletedColumn) {
+                            db.execSQL("ALTER TABLE ShoppingListItem ADD COLUMN isCompleted INTEGER NOT NULL DEFAULT 0")
+                        }
+                    }
                 }
             }
         )

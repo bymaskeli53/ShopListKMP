@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.gundogar.shoplist.domain.model.ShoppingItem
 import com.gundogar.shoplist.domain.model.ShoppingList
 import com.gundogar.shoplist.presentation.list.components.ListRow
 import com.gundogar.shoplist.ui.strings.LocalStrings
@@ -39,6 +40,7 @@ fun ShoppingListScreen(
     shoppingLists: List<ShoppingList>,
     isLoading: Boolean = false,
     onToggleCompleted: (ShoppingList) -> Unit = {},
+    onToggleItemCompleted: (ShoppingList, ShoppingItem) -> Unit = { _, _ -> },
     onListClick: (ShoppingList) -> Unit = {},
     onNavigateToAdd: () -> Unit = {},
     onDeleteList: (ShoppingList) -> Unit = {},
@@ -311,6 +313,7 @@ fun ShoppingListScreen(
                             shoppingList = shoppingList,
                             onClick = { onListClick(it) },
                             onToggle = { onToggleCompleted(it) },
+                            onToggleItem = { list, item -> onToggleItemCompleted(list, item) },
                             onReadAloud = { selectedList ->
                                 // Create a spoken text from the shopping list items
                                 val spokenText = buildString {

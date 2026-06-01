@@ -54,6 +54,8 @@ object EnglishStrings : Strings {
     override val contentDescAddItem = "Add item"
     override val contentDescShare = "Share on WhatsApp"
     override val contentDescReadList = "Read list"
+    override val contentDescMarkComplete = "Mark item as completed"
+    override val contentDescMarkIncomplete = "Mark item as not completed"
 
     // Error Messages
     override val errorQuantityMustBeNumeric = "Quantity must be a number"
@@ -73,4 +75,5 @@ object EnglishStrings : Strings {
     override fun formatItemCount(count: Int): String = "$count $infoItemCount"
     override fun formatListCount(count: Int): String = "You have $count $infoListCount"
     override fun formatSearchResults(count: Int): String = "$count $infoSearchResults"
+    override fun formatCompletedCount(completed: Int, total: Int): String = "$completed/$total $infoItemCount"
 }

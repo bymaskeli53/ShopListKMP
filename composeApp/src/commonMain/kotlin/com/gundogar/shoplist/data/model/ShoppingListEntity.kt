@@ -22,7 +22,8 @@ data class ShoppingItemEntity(
     val id: String,
     val title: String,
     val quantity: String,
-    val unit: String
+    val unit: String,
+    val isCompleted: Boolean
 )
 
 /**
@@ -43,7 +44,8 @@ fun ShoppingItemEntity.toDomain(): ShoppingItem {
         id = id,
         title = title,
         quantity = quantity,
-        unit = unit
+        unit = unit,
+        isCompleted = isCompleted
     )
 }
 
@@ -52,7 +54,8 @@ fun ShoppingItem.toEntity(): ShoppingItemEntity {
         id = id,
         title = title,
         quantity = quantity,
-        unit = unit
+        unit = unit,
+        isCompleted = isCompleted
     )
 }
 

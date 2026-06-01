@@ -15,4 +15,8 @@ class DetailViewModel(
     suspend fun updateShoppingList(listId: String, title: String, shoppingItems: List<ShoppingItem>) {
         repository.updateShoppingList(listId, title, shoppingItems)
     }
+
+    suspend fun toggleItemCompletion(listId: String, itemId: String, isCompleted: Boolean) {
+        repository.toggleItemCompletion(listId, itemId, isCompleted)
+    }
 }

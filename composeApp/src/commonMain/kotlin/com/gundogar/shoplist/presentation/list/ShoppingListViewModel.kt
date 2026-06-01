@@ -2,6 +2,7 @@ package com.gundogar.shoplist.presentation.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gundogar.shoplist.domain.model.ShoppingItem
 import com.gundogar.shoplist.domain.model.ShoppingList
 import com.gundogar.shoplist.domain.repository.ShoppingRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,6 +41,12 @@ class ShoppingListViewModel(
     fun toggleShoppingListCompletion(shoppingList: ShoppingList) {
         viewModelScope.launch {
             repository.toggleShoppingListCompletion(shoppingList.id, !shoppingList.isCompleted)
+        }
+    }
+
+    fun toggleItemCompletion(shoppingList: ShoppingList, shoppingItem: ShoppingItem) {
+        viewModelScope.launch {
+            repository.toggleItemCompletion(shoppingList.id, shoppingItem.id, !shoppingItem.isCompleted)
         }
     }
 

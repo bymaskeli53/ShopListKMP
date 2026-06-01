@@ -15,6 +15,7 @@ CREATE TABLE ShoppingListItem (
     quantity TEXT NOT NULL DEFAULT '',
     unit TEXT NOT NULL DEFAULT '',
     position INTEGER NOT NULL,
+    isCompleted INTEGER NOT NULL DEFAULT 0,
     FOREIGN KEY (listId) REFERENCES ShoppingList(id) ON DELETE CASCADE
 );
 
@@ -41,8 +42,8 @@ VALUES (?, ?, ?, ?, ?);
 
 -- Insert a shopping list item
 insertListItem:
-INSERT INTO ShoppingListItem(id, listId, title, quantity, unit, position)
-VALUES (?, ?, ?, ?, ?, ?);
+INSERT INTO ShoppingListItem(id, listId, title, quantity, unit, position, isCompleted)
+VALUES (?, ?, ?, ?, ?, ?, ?);
 
 -- Update list completion status
 updateListCompletionStatus:
@@ -66,6 +67,12 @@ WHERE id = ?;
 updateListItem:
 UPDATE ShoppingListItem
 SET title = ?, quantity = ?, unit = ?
+WHERE id = ?;
+
+-- Update a single item's completion status
+updateItemCompletionStatus:
+UPDATE ShoppingListItem
+SET isCompleted = ?
 WHERE id = ?;
 
 -- Delete a list (items will be cascade deleted)

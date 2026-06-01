@@ -29,7 +29,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.outlined.Circle
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -61,6 +63,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.gundogar.shoplist.domain.model.ShoppingItemFormState
 import com.gundogar.shoplist.ui.strings.LocalStrings
@@ -406,7 +409,9 @@ fun ItemEntryCard(
     textPrimary: Color,
     textSecondary: Color,
     focusRequester: FocusRequester,
-    focusManager: FocusManager
+    focusManager: FocusManager,
+    isCompleted: Boolean = false,
+    onToggleComplete: (() -> Unit)? = null
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -425,12 +430,32 @@ fun ItemEntryCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = "#${index + 1}",
-                    style = MaterialTheme.typography.labelLarge,
-                    color = accentColor,
-                    fontWeight = FontWeight.Bold
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // Tap-to-toggle completion (only shown when a handler is provided)
+                    if (onToggleComplete != null) {
+                        IconButton(
+                            onClick = onToggleComplete,
+                            modifier = Modifier.size(40.dp)
+                        ) {
+                            Icon(
+                                imageVector = if (isCompleted) Icons.Filled.CheckCircle else Icons.Outlined.Circle,
+                                contentDescription = if (isCompleted) strings.contentDescMarkIncomplete else strings.contentDescMarkComplete,
+                                tint = if (isCompleted) accentColor else textSecondary,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(4.dp))
+                    }
+
+                    Text(
+                        text = "#${index + 1}",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = accentColor,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
 
                 if (canDelete) {
                     IconButton(
@@ -484,7 +509,9 @@ fun ItemEntryCard(
                     unfocusedContainerColor = Color.Transparent,
                 ),
                 shape = RoundedCornerShape(12.dp),
-                textStyle = MaterialTheme.typography.bodyLarge,
+                textStyle = MaterialTheme.typography.bodyLarge.copy(
+                    textDecoration = if (isCompleted) TextDecoration.LineThrough else null
+                ),
                 singleLine = true
             )
 

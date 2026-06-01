@@ -44,6 +44,11 @@ interface ShoppingRepository {
     suspend fun toggleShoppingListCompletion(listId: String, isCompleted: Boolean)
 
     /**
+     * Toggle the completed status of a single item within a list
+     */
+    suspend fun toggleItemCompletion(listId: String, itemId: String, isCompleted: Boolean)
+
+    /**
      * Delete a shopping list
      */
     suspend fun deleteShoppingList(listId: String)

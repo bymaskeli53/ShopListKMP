@@ -36,7 +36,8 @@ class ShoppingRepositoryImpl(databaseDriverFactory: DatabaseDriverFactory) : Sho
                         id = dbItem.id,
                         title = dbItem.title,
                         quantity = dbItem.quantity,
-                        unit = dbItem.unit
+                        unit = dbItem.unit,
+                        isCompleted = dbItem.isCompleted == 1L
                     )
                 }
                 ShoppingListEntity(
@@ -57,7 +58,8 @@ class ShoppingRepositoryImpl(databaseDriverFactory: DatabaseDriverFactory) : Sho
                 id = dbItem.id,
                 title = dbItem.title,
                 quantity = dbItem.quantity,
-                unit = dbItem.unit
+                unit = dbItem.unit,
+                isCompleted = dbItem.isCompleted == 1L
             )
         }
         ShoppingListEntity(
@@ -93,7 +95,8 @@ class ShoppingRepositoryImpl(databaseDriverFactory: DatabaseDriverFactory) : Sho
                     title = itemTitle,
                     quantity = itemQuantity,
                     unit = itemUnit,
-                    position = index.toLong()
+                    position = index.toLong(),
+                    isCompleted = 0L
                 )
             }
         }
@@ -124,7 +127,8 @@ class ShoppingRepositoryImpl(databaseDriverFactory: DatabaseDriverFactory) : Sho
                         title = shoppingItem.title,
                         quantity = shoppingItem.quantity,
                         unit = shoppingItem.unit,
-                        position = index.toLong()
+                        position = index.toLong(),
+                        isCompleted = if (shoppingItem.isCompleted) 1L else 0L
                     )
                 }
 
@@ -143,6 +147,21 @@ class ShoppingRepositoryImpl(databaseDriverFactory: DatabaseDriverFactory) : Sho
 
     override suspend fun toggleShoppingListCompletion(listId: String, isCompleted: Boolean) = withContext(Dispatchers.IO) {
         queries.updateListCompletionStatus(isCompleted = if (isCompleted) 1L else 0L, id = listId)
+    }
+
+    override suspend fun toggleItemCompletion(listId: String, itemId: String, isCompleted: Boolean) = withContext(Dispatchers.IO) {
+        queries.transaction {
+            queries.updateItemCompletionStatus(
+                isCompleted = if (isCompleted) 1L else 0L,
+                id = itemId
+            )
+            // Touch the parent list so the lists Flow (which only observes the
+            // ShoppingList table) re-emits and the UI reflects the change.
+            queries.touchList(
+                updatedAt = Clock.System.now().toEpochMilliseconds(),
+                id = listId
+            )
+        }
     }
 
     override suspend fun deleteShoppingList(listId: String) = withContext(Dispatchers.IO) {
@@ -169,7 +188,8 @@ class ShoppingRepositoryImpl(databaseDriverFactory: DatabaseDriverFactory) : Sho
                     title = shoppingItem.title,
                     quantity = shoppingItem.quantity,
                     unit = shoppingItem.unit,
-                    position = index.toLong()
+                    position = index.toLong(),
+                    isCompleted = if (shoppingItem.isCompleted) 1L else 0L
                 )
             }
         }

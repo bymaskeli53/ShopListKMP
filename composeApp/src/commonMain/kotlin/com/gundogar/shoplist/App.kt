@@ -45,6 +45,7 @@ fun App() {
                     shoppingLists = shoppingLists,
                     isLoading = isLoading,
                     onToggleCompleted = { shoppingList -> listViewModel.toggleShoppingListCompletion(shoppingList) },
+                    onToggleItemCompleted = { shoppingList, shoppingItem -> listViewModel.toggleItemCompletion(shoppingList, shoppingItem) },
                     onListClick = { shoppingList -> navController.navigate("detail/${shoppingList.id}") },
                     onNavigateToAdd = { navController.navigate("add_item") },
                     onDeleteList = { shoppingList -> listViewModel.deleteShoppingList(shoppingList.id) },
@@ -73,6 +74,9 @@ fun App() {
                         onNavigateBack = { navController.popBackStack() },
                         onSave = { id, listTitle, shoppingItems ->
                             detailViewModel.updateShoppingList(id, listTitle, shoppingItems)
+                        },
+                        onToggleItemCompletion = { id, itemId, isCompleted ->
+                            detailViewModel.toggleItemCompletion(id, itemId, isCompleted)
                         }
                     )
                 }

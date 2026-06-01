@@ -54,6 +54,8 @@ object TurkishStrings : Strings {
     override val contentDescAddItem = "Ürün ekle"
     override val contentDescShare = "WhatsApp'ta paylaş"
     override val contentDescReadList = "Listeyi oku"
+    override val contentDescMarkComplete = "Ürünü tamamlandı olarak işaretle"
+    override val contentDescMarkIncomplete = "Ürünü tamamlanmadı olarak işaretle"
 
     // Error Messages
     override val errorQuantityMustBeNumeric = "Miktar sayı olmalıdır"
@@ -73,4 +75,5 @@ object TurkishStrings : Strings {
     override fun formatItemCount(count: Int): String = "$count $infoItemCount"
     override fun formatListCount(count: Int): String = "$count $infoListCount"
     override fun formatSearchResults(count: Int): String = "$count $infoSearchResults"
+    override fun formatCompletedCount(completed: Int, total: Int): String = "$completed/$total $infoItemCount"
 }

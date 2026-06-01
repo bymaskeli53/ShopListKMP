@@ -12,6 +12,7 @@ data class ShoppingItemFormState(
     val title: String = "",
     val quantity: String = "",
     val unit: String = "",
+    val isCompleted: Boolean = false,
     val quantityError: String? = null,
     val unitError: String? = null
 )

@@ -7,5 +7,6 @@ data class ShoppingItem(
     val id: String,
     val title: String,
     val quantity: String = "",
-    val unit: String = ""
+    val unit: String = "",
+    val isCompleted: Boolean = false
 )

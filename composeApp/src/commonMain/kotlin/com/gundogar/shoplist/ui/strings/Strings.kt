@@ -54,6 +54,8 @@ sealed interface Strings {
     val contentDescAddItem: String
     val contentDescShare: String
     val contentDescReadList: String
+    val contentDescMarkComplete: String
+    val contentDescMarkIncomplete: String
 
     // Error Messages
     val errorQuantityMustBeNumeric: String
@@ -66,4 +68,5 @@ sealed interface Strings {
     fun formatItemCount(count: Int): String
     fun formatListCount(count: Int): String
     fun formatSearchResults(count: Int): String
+    fun formatCompletedCount(completed: Int, total: Int): String // Format: "3/5 items"
 }

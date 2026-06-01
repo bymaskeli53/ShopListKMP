@@ -1,0 +1,5 @@
+-- Migration from schema version 2 to version 3
+-- Adds per-item completion support to ShoppingListItem.
+-- Existing items default to not completed (0).
+
+ALTER TABLE ShoppingListItem ADD COLUMN isCompleted INTEGER NOT NULL DEFAULT 0;
